@@ -205,8 +205,14 @@ module Css2Less
           add_rule(@tree, [], import_rule)
         end
         # leave multiple rules alone
+        # add multiple rules as sepearte rules
         if rules.include?(',')
-          add_rule(@tree, [rules], style[1])
+          peices = rules.split(/, */);  
+          peices.each do |subrule|
+            rules_split = subrule.split(/\s+/)
+            rules_split.map! {|rule| rule.gsub('&>', '& > ')}
+            add_rule(@tree, rules_split, style[1])
+          end
         else
           rules_split = rules.split(/\s+/)
           # handle child selector case - step2
